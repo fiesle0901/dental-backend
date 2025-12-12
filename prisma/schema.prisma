@@ -11,3 +11,151 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Sex {
+  M
+  F
+}
+
+enum YesNo {
+  Yes 
+  No
+}
+
+model Patient{
+  id                  String       @id @default(uuid())
+
+  lastName            String?
+  firstName           String?
+  middleName          String?
+  birthdate           DateTime?
+  age                 Int?
+  sex                 Sex?
+  religion            String?
+  nickname            String?
+  homeAddress         String?
+  homeNo              String?
+  occupation          String?
+  officeNo            String?
+  dentalInsurance     String?
+  faxNo               String?
+  effectiveDate       DateTime?
+  cellMobileNo        String?
+  emailAddress        String?
+  parentGuardianName  String?
+  parentOccupation    String?
+  referredBy          String?
+  consultationReason  String?
+
+  dentalHistory   DentalHistory?
+  medicalHistory  MedicalHistory?
+}
+
+model DentalHistory {
+  id                  String    @id @default(uuid())
+  patientId           String    @unique
+  previousDentist     String
+  lastDentalVisit     String
+
+  patient             Patient   @relation(fields: [patientId], references:[id], onDelete: Cascade)
+}
+
+model MedicalHistory {
+  id                        String    @id @default(uuid())
+  patientId                 String    @unique
+
+  physicianName             String      
+  physicianAddress          String
+  physicianSpecialty        String
+  physicianOfficeNumber     String
+  goodHealth                YesNo?
+  underMedicalTreatment     YesNo?
+  medicalConditionBeingTreated String?
+  seriousIllnessSurgery     YesNo?
+  illnessOrOperationDetails String?
+  hospitalized              YesNo?
+  hospitalizationDetails    String?
+  takingMedication          YesNo?
+  medicationDetails         String?
+  useTobacco                YesNo?
+  useAlcoholDrugs           YesNo?
+  bleedingTime              String?
+  bloodType                 String?
+  bloodPressure             String?
+
+  allergies                 MedicalAllergies?
+  forWomenOnly              ForWomenOnly?
+  medicalConditions         MedicalConditions?
+
+  patient                   Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+model MedicalAllergies {
+  id                  String          @id @default(uuid())
+  medicalHistoryId    String          @unique
+
+  localAnesthetic YesNo?
+  penicillin      YesNo?
+  antibiotics     YesNo?
+  sulfaDrugs      YesNo?
+  aspirin         YesNo?
+  latex           YesNo?
+  others          String?
+
+  medicalHistory  MedicalHistory    @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+}
+
+model ForWomenOnly {
+  id                  String          @id @default(uuid())
+  medicalHistoryId    String          @unique
+
+  pregnant            YesNo?
+  nursing             YesNo?
+  takingBirthControl  YesNo?
+
+  medicalHistory      MedicalHistory  @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)         
+}
+
+model MedicalConditions {
+  id                  String          @id @default(uuid())
+  medicalHistoryId      String          @unique
+
+  highBloodPressure       Boolean?
+  lowBloodPressure        Boolean?
+  epilepsyConvulsions     Boolean?
+  aidsHivInfection        Boolean?
+  sexuallyTransmittedDisease Boolean?
+  stomachTroublesUlcers   Boolean?
+  faintingSeizure         Boolean?
+  rapidWeightLoss         Boolean?
+  radiationTherapy        Boolean?
+  jointReplacementImplant Boolean?
+  heartSurgery            Boolean?
+  heartAttack             Boolean?
+  thyroidProblem          Boolean?
+  heartDisease            Boolean?
+  heartMurmur             Boolean?
+  hepatitisLiverDisease   Boolean?
+  rheumaticFever          Boolean?
+  hayFeverAllergies       Boolean?
+  respiratoryProblems     Boolean?
+  hepatitisJaundice       Boolean?
+  tuberculosis            Boolean?
+  swollenAnkles           Boolean?
+  kidneyDisease           Boolean?
+  diabetes                Boolean?
+  chestPain               Boolean?
+  stroke                  Boolean?
+  cancerTumors            Boolean?
+  anemia                  Boolean?
+  angina                  Boolean?
+  asthma                  Boolean?
+  emphysema               Boolean?
+  bleedingProblems        Boolean?
+  bloodDiseases           Boolean?
+  headInjuries            Boolean?
+  arthritisRheumatism     Boolean?
+  other                   String?
+
+  medicalHistory          MedicalHistory    @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+}
