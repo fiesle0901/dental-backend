@@ -56,19 +56,19 @@ Your entire response must be exactly this JSON structure (nothing more):
     "bloodPressure": "",
 
     "allergies": {
-      "localAnesthetic": "",
-      "penicillin": "",
-      "antibiotics": "",
-      "sulfaDrugs": "",
-      "aspirin": "",
-      "latex": "",
-      "others": ""
+      "localAnesthetic": "No",
+      "penicillin": "Yes",
+      "antibiotics": "No",
+      "sulfaDrugs": "No",
+      "aspirin": "No",
+      "latex": "No",
+      "others": "No"
     },
 
     "forWomenOnly": {
-      "pregnant": "",
-      "nursing": "",
-      "takingBirthControl": ""
+      "pregnant": "No",
+      "nursing": "No",
+      "takingBirthControl": "Yes"
     },
 
     "medicalConditions": {

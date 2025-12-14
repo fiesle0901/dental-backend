@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,21 +6,8 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Sex {
-  M
-  F
-}
-
-enum YesNo {
-  Yes
-  No
-}
-
-// PAGE 1
-
 model Patient {
-  id String @id @default(uuid())
-
+  id                 String          @id @default(uuid())
   lastName           String?
   firstName          String?
   middleName         String?
@@ -48,11 +29,9 @@ model Patient {
   parentOccupation   String?
   referredBy         String?
   consultationReason String?
-
-  dentalHistory  DentalHistory?
-  medicalHistory MedicalHistory?
-
-  dentalChart DentalChart?
+  dentalChart        DentalChart?
+  dentalHistory      DentalHistory?
+  medicalHistory     MedicalHistory?
 }
 
 model DentalHistory {
@@ -60,19 +39,16 @@ model DentalHistory {
   patientId       String  @unique
   previousDentist String?
   lastDentalVisit String?
-
-  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient         Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model MedicalHistory {
-  id        String @id @default(uuid())
-  patientId String @unique
-
-  physicianName         String?
-  physicianAddress      String?
-  physicianSpecialty    String?
-  physicianOfficeNumber String?
-
+  id                           String             @id @default(uuid())
+  patientId                    String             @unique
+  physicianName                String?
+  physicianAddress             String?
+  physicianSpecialty           String?
+  physicianOfficeNumber        String?
   goodHealth                   YesNo?
   underMedicalTreatment        YesNo?
   medicalConditionBeingTreated String?
@@ -87,44 +63,37 @@ model MedicalHistory {
   bleedingTime                 String?
   bloodType                    String?
   bloodPressure                String?
-
-  allergies         MedicalAllergies?
-  forWomenOnly      ForWomenOnly?
-  medicalConditions MedicalConditions?
-
-  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  forWomenOnly                 ForWomenOnly?
+  allergies                    MedicalAllergies?
+  medicalConditions            MedicalConditions?
+  patient                      Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model MedicalAllergies {
-  id               String @id @default(uuid())
-  medicalHistoryId String @unique
-
-  localAnesthetic YesNo?
-  penicillin      YesNo?
-  antibiotics     YesNo?
-  sulfaDrugs      YesNo?
-  aspirin         YesNo?
-  latex           YesNo?
-  others          String?
-
-  medicalHistory MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+  id               String         @id @default(uuid())
+  medicalHistoryId String         @unique
+  localAnesthetic  YesNo?
+  penicillin       YesNo?
+  antibiotics      YesNo?
+  sulfaDrugs       YesNo?
+  aspirin          YesNo?
+  latex            YesNo?
+  others           String?
+  medicalHistory   MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
 }
 
 model ForWomenOnly {
-  id               String @id @default(uuid())
-  medicalHistoryId String @unique
-
+  id                 String         @id @default(uuid())
+  medicalHistoryId   String         @unique
   pregnant           YesNo?
   nursing            YesNo?
   takingBirthControl YesNo?
-
-  medicalHistory MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+  medicalHistory     MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
 }
 
 model MedicalConditions {
-  id               String @id @default(uuid())
-  medicalHistoryId String @unique
-
+  id                         String         @id @default(uuid())
+  medicalHistoryId           String         @unique
   highBloodPressure          Boolean?
   lowBloodPressure           Boolean?
   epilepsyConvulsions        Boolean?
@@ -161,57 +130,105 @@ model MedicalConditions {
   headInjuries               Boolean?
   arthritisRheumatism        Boolean?
   other                      String?
-
-  medicalHistory MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+  medicalHistory             MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
 }
 
-// PAGE 2
-
 model DentalChart {
-  id        String @id @default(uuid())
-  patientId String @unique
-
-  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
-
-  teeth      ToothFinding[]
+  id          String                @id @default(uuid())
+  patientId   String                @unique
+  appliances  Appliances[]
+  patient     Patient               @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  occlusion   Occlusion?
   periodontal PeriodontalScreening?
-  occlusion  Occlusion?
-  appliances Appliances[]
-  tmd        Tmd[]
+  tmd         Tmd[]
+  teeth       ToothFinding[]
 }
 
 model ToothFinding {
-  id            String @id @default(uuid())
+  id            String             @id @default(uuid())
   dentalChartId String
-
-  toothNumber  String
-  condition    ToothCondition?
-  restorations ToothRestoration[]
-  surgeries    ToothSurgery[]
-
-  dentalChart DentalChart @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
+  toothNumber   String
+  condition     ToothCondition?
+  dentalChart   DentalChart        @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
+  restorations  ToothRestoration[]
+  surgeries     ToothSurgery[]
 
   @@unique([dentalChartId, toothNumber])
 }
 
-enum ToothCondition {
-  PRESENT // o
-  DECAYED // D
-  MISSING_CARIES // M
-  MISSING_OTHER // MO
-  IMPACTED // Im
-  SUPERNUMERARY // Sp
-  ROOT_FRAGMENT // Rf
-  UNERUPTED // Un
+model ToothRestoration {
+  id      String          @id @default(uuid())
+  toothId String
+  type    RestorationType
+  tooth   ToothFinding    @relation(fields: [toothId], references: [id])
 }
 
-model ToothRestoration {
-  id      String @id @default(uuid())
-  toothId String
+model ToothSurgery {
+  id           String       @id @default(uuid())
+  toothId      String
+  toothSurgery SurgeryType
+  tooth        ToothFinding @relation(fields: [toothId], references: [id])
+}
 
-  type RestorationType
+model PeriodontalScreening {
+  id                     String      @id @default(uuid())
+  dentalChartId          String      @unique
+  gingivitis             Boolean      @default(false)
+  earlyPeriodontitis     Boolean      @default(false)
+  moderatePeriodontitis  Boolean      @default(false)
+  advancedPeriodontitis Boolean       @default(false)
+  form                   DentalChart @relation(fields: [dentalChartId], references: [id])
+}
 
-  tooth ToothFinding @relation(fields: [toothId], references: [id])
+model Occlusion {
+  id               String      @id @default(uuid())
+  dentalChartId    String      @unique
+  molarClass       Boolean     @default(false)  
+  overjet          Boolean     @default(false)
+  overbite         Boolean     @default(false)
+  midlineDeviation Boolean     @default(false)
+  crossbite        Boolean     @default(false)
+  form             DentalChart @relation(fields: [dentalChartId], references: [id])
+}
+
+model Appliances {
+  id            String      @id @default(uuid())
+  dentalChartId String
+  orthodontic   Boolean     @default(false)
+  stayplate     Boolean     @default(false)
+  others        String?
+  form          DentalChart @relation(fields: [dentalChartId], references: [id])
+}
+
+model Tmd {
+  id            String      @id @default(uuid())
+  dentalChartId String
+  clenching     Boolean     @default(false)
+  clicking      Boolean     @default(false)
+  trismus       Boolean     @default(false)
+  muscleSpasm   Boolean     @default(false)
+  form          DentalChart @relation(fields: [dentalChartId], references: [id])
+}
+
+enum Sex {
+  M
+  F
+}
+
+enum YesNo {
+  Yes
+  No
+}
+
+enum ToothCondition {
+  PRESENT
+  DECAYED
+  MISSING_CARIES
+  MISSING_OTHER
+  IMPACTED
+  SUPERNUMERARY
+  ROOT_FRAGMENT
+  UNERUPTED
 }
 
 enum RestorationType {
@@ -227,65 +244,7 @@ enum RestorationType {
   RM
 }
 
-model ToothSurgery {
-  id      String @id @default(uuid())
-  toothId String
-
-  toothSurgery SurgeryType
-
-  tooth ToothFinding @relation(fields: [toothId], references: [id])
-}
-
 enum SurgeryType {
   EXTRACTION_CARIES
   EXTRACTION_OTHER
-}
-
-model PeriodontalScreening {
-  id            String @id @default(uuid())
-  dentalChartId String @unique
-
-  gingivitis            Boolean
-  earlyPeriodontitis    Boolean
-  moderatePeriodontitis Boolean
-  advancedPeriodondities Boolean
-
-  form DentalChart @relation(fields: [dentalChartId], references: [id])
-}
-
-model Occlusion {
-  id            String @id @default(uuid())
-  dentalChartId String @unique
-
-  molarClass            Boolean
-  overjet          Boolean
-  overbite         Boolean
-  midlineDeviation Boolean
-  crossbite        Boolean
-
-  form DentalChart @relation(fields: [dentalChartId], references: [id])
-}
-
-model Appliances {
-  id            String @id @default(uuid())
-  dentalChartId String
-
-  orthodontic Boolean
-  stayplate  Boolean
-  overbite   Boolean
-  others     Boolean
-
-  form DentalChart @relation(fields: [dentalChartId], references: [id])
-}
-
-model Tmd {
-  id            String @id @default(uuid())
-  dentalChartId String
-
-  clenching   Boolean
-  clicking    Boolean
-  trismus     Boolean
-  muscleSpasm Boolean
-
-  form DentalChart @relation(fields: [dentalChartId], references: [id])
 }

@@ -187,10 +187,10 @@ CREATE TABLE "ToothSurgery" (
 CREATE TABLE "PeriodontalScreening" (
     "id" TEXT NOT NULL,
     "dentalChartId" TEXT NOT NULL,
-    "gingivitis" BOOLEAN NOT NULL,
-    "earlyPeriodontitis" BOOLEAN NOT NULL,
-    "moderatePeriodontitis" BOOLEAN NOT NULL,
-    "advancedPeriodondities" BOOLEAN NOT NULL,
+    "gingivitis" BOOLEAN NOT NULL DEFAULT false,
+    "earlyPeriodontitis" BOOLEAN NOT NULL DEFAULT false,
+    "moderatePeriodontitis" BOOLEAN NOT NULL DEFAULT false,
+    "advancedPeriodontitis" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "PeriodontalScreening_pkey" PRIMARY KEY ("id")
 );
@@ -199,11 +199,11 @@ CREATE TABLE "PeriodontalScreening" (
 CREATE TABLE "Occlusion" (
     "id" TEXT NOT NULL,
     "dentalChartId" TEXT NOT NULL,
-    "molarClass" BOOLEAN NOT NULL,
-    "overjet" BOOLEAN NOT NULL,
-    "overbite" BOOLEAN NOT NULL,
-    "midlineDeviation" BOOLEAN NOT NULL,
-    "crossbite" BOOLEAN NOT NULL,
+    "molarClass" BOOLEAN NOT NULL DEFAULT false,
+    "overjet" BOOLEAN NOT NULL DEFAULT false,
+    "overbite" BOOLEAN NOT NULL DEFAULT false,
+    "midlineDeviation" BOOLEAN NOT NULL DEFAULT false,
+    "crossbite" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Occlusion_pkey" PRIMARY KEY ("id")
 );
@@ -212,10 +212,9 @@ CREATE TABLE "Occlusion" (
 CREATE TABLE "Appliances" (
     "id" TEXT NOT NULL,
     "dentalChartId" TEXT NOT NULL,
-    "orthodontic" BOOLEAN NOT NULL,
-    "stayplate" BOOLEAN NOT NULL,
-    "overbite" BOOLEAN NOT NULL,
-    "others" BOOLEAN NOT NULL,
+    "orthodontic" BOOLEAN NOT NULL DEFAULT false,
+    "stayplate" BOOLEAN NOT NULL DEFAULT false,
+    "others" TEXT,
 
     CONSTRAINT "Appliances_pkey" PRIMARY KEY ("id")
 );
@@ -224,10 +223,10 @@ CREATE TABLE "Appliances" (
 CREATE TABLE "Tmd" (
     "id" TEXT NOT NULL,
     "dentalChartId" TEXT NOT NULL,
-    "clenching" BOOLEAN NOT NULL,
-    "clicking" BOOLEAN NOT NULL,
-    "trismus" BOOLEAN NOT NULL,
-    "muscleSpasm" BOOLEAN NOT NULL,
+    "clenching" BOOLEAN NOT NULL DEFAULT false,
+    "clicking" BOOLEAN NOT NULL DEFAULT false,
+    "trismus" BOOLEAN NOT NULL DEFAULT false,
+    "muscleSpasm" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Tmd_pkey" PRIMARY KEY ("id")
 );
