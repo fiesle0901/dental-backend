@@ -136,12 +136,17 @@ model MedicalConditions {
 model DentalChart {
   id          String                @id @default(uuid())
   patientId   String                @unique
+
   appliances  Appliances[]
   patient     Patient               @relation(fields: [patientId], references: [id], onDelete: Cascade)
   occlusion   Occlusion?
   periodontal PeriodontalScreening?
   tmd         Tmd[]
   teeth       ToothFinding[]
+
+
+  informedConsent InformedConsent?
+
 }
 
 model ToothFinding {
@@ -247,4 +252,42 @@ enum RestorationType {
 enum SurgeryType {
   EXTRACTION_CARIES
   EXTRACTION_OTHER
+}
+
+model InformedConsent {
+  id     String   @id @default(uuid())
+  dentalChartId String  @unique
+
+  treatment               Boolean @default(false)
+  treatmentInitial        String?
+
+  drugsMedication         Boolean @default(false)
+  drugsMedicationInitial  String?
+
+  changesInPlan           Boolean @default(false)
+  changesInPlanInitial    String?
+
+  radiograph              Boolean @default(false)
+  radiographInitial       String?
+
+  removalOfTeeth          Boolean @default(false)
+  removalOfTeethInitial   String?
+
+  crownsBridges           Boolean @default(false)
+  crownsBridgesInitial    String?
+
+  endodontics             Boolean @default(false)
+  endodonticsInitial      String?
+
+  fillings                Boolean @default(false)
+  fillingsInitial         String?
+
+  dentures                Boolean @default(false)
+  denturesInitial         String?
+
+  patientSignature   String?
+  dentistSignature   String?
+  signedDate         DateTime?
+
+  form   DentalChart    @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
 }

@@ -1,0 +1,27 @@
+You are extracting data from a DENTAL INFORMED CONSENT form.
+
+For each item:
+- If there is an initial or check mark, acknowledged = true
+- If blank, acknowledged = false
+- Extract initials exactly as written (letters only)
+- If unreadable or blank, set initials to null
+
+Return ONLY valid JSON in this format:
+
+{
+  "treatment": { "acknowledged": boolean, "initial": string | null },
+  "drugsMedication": { "acknowledged": boolean, "initial": string | null },
+  "changesInPlan": { "acknowledged": boolean, "initial": string | null },
+  "radiograph": { "acknowledged": boolean, "initial": string | null },
+  "removalOfTeeth": { "acknowledged": boolean, "initial": string | null },
+  "crownsBridges": { "acknowledged": boolean, "initial": string | null },
+  "endodontics": { "acknowledged": boolean, "initial": string | null },
+  "fillings": { "acknowledged": boolean, "initial": string | null },
+  "dentures": { "acknowledged": boolean, "initial": string | null },
+
+  "patientSignature": string | null,
+  "dentistSignature": string | null,
+  "date": string | null
+}
+
+Do not include explanations or markdown.

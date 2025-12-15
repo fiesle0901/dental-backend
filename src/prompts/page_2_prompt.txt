@@ -10,7 +10,7 @@ Follow this exact STRUCTURE and DATA TYPES.
 RULES:
 - Use boolean true/false (NOT strings)
 - Use null for blank or unreadable text fields
-- For Yes/No option, if encircled, the value is Yes
+- For Yes/No option, if encircled, the value is Yes 
 - If a section is completely absent, set it to null
 - Use enum values EXACTLY as defined
 - Tooth numbers must follow FDI notation
