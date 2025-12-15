@@ -6,14 +6,51 @@ datasource db {
   provider = "postgresql"
 }
 
+model DentalRecord {
+  id        String @id @default(uuid())
+  patientId String?
+
+  patient Patient? @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  patientSnapshot   PatientSnapshot?
+  dentalHistory      DentalHistory?
+  medicalHistory     MedicalHistory?
+
+  dentalChart DentalChart?
+
+  informedConsent  InformedConsent?
+  treatmentRecords TreatmentRecord[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  page1Completed Boolean @default(false)
+  page2Completed Boolean @default(false)
+  page3Completed Boolean @default(false)
+  page4Completed Boolean @default(false)
+}
+
 model Patient {
+  id         String @id @default(uuid())
+    
+  firstName  String?
+  lastName   String?
+  birthdate  DateTime?
+  sex        Sex?
+
+  dentalRecords DentalRecord[]
+}
+
+model PatientSnapshot {
   id                 String          @id @default(uuid())
+  dentalRecordId     String          @unique
+
   lastName           String?
   firstName          String?
   middleName         String?
   birthdate          DateTime?
-  age                Int?
   sex                Sex?
+  nationality                  String?             @default("Filipino")
   religion           String?
   nickname           String?
   homeAddress        String?
@@ -29,22 +66,23 @@ model Patient {
   parentOccupation   String?
   referredBy         String?
   consultationReason String?
-  dentalChart        DentalChart?
-  dentalHistory      DentalHistory?
-  medicalHistory     MedicalHistory?
+ 
+  record        DentalRecord      @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade )
 }
 
 model DentalHistory {
   id              String  @id @default(uuid())
-  patientId       String  @unique
+  dentalRecordId  String  @unique
+
   previousDentist String?
   lastDentalVisit String?
-  patient         Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  record          DentalRecord @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade)
 }
+
 
 model MedicalHistory {
   id                           String             @id @default(uuid())
-  patientId                    String             @unique
+  dentalRecordId String   @unique
   physicianName                String?
   physicianAddress             String?
   physicianSpecialty           String?
@@ -66,7 +104,7 @@ model MedicalHistory {
   forWomenOnly                 ForWomenOnly?
   allergies                    MedicalAllergies?
   medicalConditions            MedicalConditions?
-  patient                      Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  record                        DentalRecord            @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade)
 }
 
 model MedicalAllergies {
@@ -134,19 +172,17 @@ model MedicalConditions {
 }
 
 model DentalChart {
-  id          String                @id @default(uuid())
-  patientId   String                @unique
+  id             String @id @default(uuid())
+  dentalRecordId String @unique
+  
 
-  appliances  Appliances[]
-  patient     Patient               @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  record      DentalRecord          @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade)
+  teeth       ToothFinding[]
   occlusion   Occlusion?
   periodontal PeriodontalScreening?
+  appliances Appliances[]
   tmd         Tmd[]
-  teeth       ToothFinding[]
-
-
-  informedConsent InformedConsent?
-  treatmentRecord TreatmentRecord[]
+ 
 
 }
 
@@ -177,19 +213,19 @@ model ToothSurgery {
 }
 
 model PeriodontalScreening {
-  id                     String      @id @default(uuid())
-  dentalChartId          String      @unique
-  gingivitis             Boolean      @default(false)
-  earlyPeriodontitis     Boolean      @default(false)
-  moderatePeriodontitis  Boolean      @default(false)
-  advancedPeriodontitis Boolean       @default(false)
-  form                   DentalChart @relation(fields: [dentalChartId], references: [id])
+  id                    String      @id @default(uuid())
+  dentalChartId         String      @unique
+  gingivitis            Boolean     @default(false)
+  earlyPeriodontitis    Boolean     @default(false)
+  moderatePeriodontitis Boolean     @default(false)
+  advancedPeriodontitis Boolean     @default(false)
+  form                  DentalChart @relation(fields: [dentalChartId], references: [id])
 }
 
 model Occlusion {
   id               String      @id @default(uuid())
   dentalChartId    String      @unique
-  molarClass       Boolean     @default(false)  
+  molarClass       Boolean     @default(false)
   overjet          Boolean     @default(false)
   overbite         Boolean     @default(false)
   midlineDeviation Boolean     @default(false)
@@ -256,59 +292,63 @@ enum SurgeryType {
 }
 
 model InformedConsent {
-  id     String   @id @default(uuid())
-  dentalChartId String  @unique
+  id            String @id @default(uuid())
+  dentalRecordId String @unique
 
-  treatment               Boolean @default(false)
-  treatmentInitial        String?
+  treatment        Boolean @default(false)
+  treatmentInitial String?
 
-  drugsMedication         Boolean @default(false)
-  drugsMedicationInitial  String?
+  drugsMedication        Boolean @default(false)
+  drugsMedicationInitial String?
 
-  changesInPlan           Boolean @default(false)
-  changesInPlanInitial    String?
+  changesInPlan        Boolean @default(false)
+  changesInPlanInitial String?
 
-  radiograph              Boolean @default(false)
-  radiographInitial       String?
+  radiograph        Boolean @default(false)
+  radiographInitial String?
 
-  removalOfTeeth          Boolean @default(false)
-  removalOfTeethInitial   String?
+  removalOfTeeth        Boolean @default(false)
+  removalOfTeethInitial String?
 
-  crownsBridges           Boolean @default(false)
-  crownsBridgesInitial    String?
+  crownsBridges        Boolean @default(false)
+  crownsBridgesInitial String?
 
-  endodontics             Boolean @default(false)
-  endodonticsInitial      String?
+  endodontics        Boolean @default(false)
+  endodonticsInitial String?
 
-  fillings                Boolean @default(false)
-  fillingsInitial         String?
+  fillings        Boolean @default(false)
+  fillingsInitial String?
 
-  dentures                Boolean @default(false)
-  denturesInitial         String?
+  dentures        Boolean @default(false)
+  denturesInitial String?
 
-  patientSignature   String?
-  dentistSignature   String?
-  signedDate         DateTime?
+  patientSignature String?
+  dentistSignature String?
+  signedDate       DateTime?
 
-  form   DentalChart    @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
+  record DentalRecord @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade)
+
+   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TreatmentRecord {
-  id        String        @id @default(uuid())
-  
-  dentalChartId String   
+  id String @id @default(uuid())
 
-  date      DateTime?     
-  toothQuantity String?  
-  procedure   String?    
-  dentist      String?
-  amountCharged Int?
-  amountPaid    Int?
-  balance       Int?
-  nextAppointment DateTime? 
+  dentalRecordId String
 
-  form  DentalChart   @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
+  date            DateTime?
+  toothQuantity   String?
+  procedure       String?
+  dentist         String?
+  amountCharged   Int?
+  amountPaid      Int?
+  balance         Int?
+  nextAppointment DateTime?
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+    record DentalRecord @relation(fields: [dentalRecordId], references: [id], onDelete: Cascade)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

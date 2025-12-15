@@ -46,7 +46,7 @@ RULES:
     "clenching": false,
     "clicking": false,
     "trismus": false,
-    "muscleSpasm" false
+    "muscleSpasm": false
   }
 }
 

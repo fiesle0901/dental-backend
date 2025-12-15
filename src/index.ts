@@ -2,7 +2,7 @@ import { config } from "dotenv";
 config();
 
 import express, { Express } from "express";
-import uploadRoutes from "./routes/upload.routes";
+import dentalRecordRoutes from "./routes/dentalRecord.routes";
 
 const app: Express = express();
 
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5002;
 
 app.use(express.json());
 
-app.use("/api/upload", uploadRoutes);
+app.use("/api/dental-records", dentalRecordRoutes);
 
 app.get("/", (req, res) => {
   res.json("Hello!");

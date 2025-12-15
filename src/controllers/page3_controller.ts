@@ -4,12 +4,12 @@ import { extractFormData } from "../services/gemini.service";
 import { prompt } from "../prompts/prompt3Loaded";
 
 export const uploadPage3Form = async (req: Request, res: Response) => {
-  const { patientId } = req.body;
+  const { recordId } = req.params;
 
   const file = (req as any).file;
 
-  if (!patientId) {
-    return res.status(400).json({ error: "Attach page 1 and 2 first" });
+  if (!recordId) {
+    return res.status(400).json({ error: "Create dental record first" });
   }
 
   if (!file) {
@@ -17,16 +17,6 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
   }
 
   try {
-    const chart = await prisma.dentalChart.findUnique({
-      where: {
-        patientId,
-      },
-    });
-
-    if (!chart) {
-      return res.status(400).json({ error: "No chartId found!" });
-    }
-
     const extractedData = await extractFormData(
       file.buffer,
       file.mimetype,
@@ -34,7 +24,7 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
     );
 
     await prisma.informedConsent.upsert({
-      where: { dentalChartId: chart.id },
+      where: { dentalRecordId: recordId },
       update: {
         treatment: extractedData.treatment.acknowledged,
         treatmentInitial: extractedData.treatment.initial,
@@ -69,7 +59,7 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
         signedDate: extractedData.date ? new Date(extractedData.date) : null,
       },
       create: {
-        dentalChartId: chart.id,
+        dentalRecordId: recordId,
 
         treatment: extractedData.treatment.acknowledged,
         treatmentInitial: extractedData.treatment.initial,
@@ -106,7 +96,7 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
 
     return res.json({
       sucess: true,
-      dentalChartId: chart.id,
+      dentalRecordId: recordId,
     });
   } catch (error: any) {
     console.error(error);

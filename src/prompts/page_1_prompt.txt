@@ -4,71 +4,70 @@ Do NOT add explanations before or after.
 Output strictly one JSON object and nothing else.
 
 Your entire response must be exactly this JSON structure (nothing more):
-
 {
   "patient": {
-    "lastName": "",
-    "firstName": "",
-    "middleName": "",
-    "birthdate": "",
-    "age": "",
-    "sex": "",
-    "religion": "",
-    "nickname": "",
-    "homeAddress": "",
-    "homeNo": "",
-    "occupation": "",
-    "officeNo": "",
-    "dentalInsurance": "",
-    "faxNo": "",
-    "effectiveDate": "",
-    "cellMobileNo": "",
-    "emailAddress": "",
-    "parentGuardianName": "",
-    "parentOccupation": "",
-    "referredBy": "",
-    "consultationReason": ""
+    "lastName": null,
+    "firstName": null,
+    "middleName": null,
+    "birthdate": null,
+    "sex": null,
+    "nationality": "Filipino",
+    "religion": null,
+    "nickname": null,
+    "homeAddress": null,
+    "homeNo": null,
+    "occupation": null,
+    "officeNo": null,
+    "dentalInsurance": null,
+    "faxNo": null,
+    "effectiveDate": null,
+    "cellMobileNo": null,
+    "emailAddress": null,
+    "parentGuardianName": null,
+    "parentOccupation": null,
+    "referredBy": null,
+    "consultationReason": null
   },
 
   "dentalHistory": {
-    "previousDentist": "",
-    "lastDentalVisit": ""
+    "previousDentist": null,
+    "lastDentalVisit": null
   },
 
   "medicalHistory": {
-    "physicianName": "",
-    "physicianAddress": "",
-    "physicianSpecialty": "",
-    "physicianOfficeNumber": "",
-    "goodHealth": "",
-    "underMedicalTreatment": "",
-    "medicalConditionBeingTreated": "",
-    "seriousIllnessSurgery": "",
-    "illnessOrOperationDetails": "",
-    "hospitalized": "",
-    "hospitalizationDetails": "",
-    "takingMedication": "",
-    "medicationDetails": "",
-    "useTobacco": "",
-    "useAlcoholDrugs": "",
-    "bleedingTime": "",
-    "bloodType": "",
-    "bloodPressure": "",
+    "physicianName": null,
+    "physicianAddress": null,
+    "physicianSpecialty": null,
+    "physicianOfficeNumber": null,
+    "goodHealth": null,
+    "underMedicalTreatment": null,
+    "medicalConditionBeingTreated": null,
+    "seriousIllnessSurgery": null,
+    "illnessOrOperationDetails": null,
+    "hospitalized": null,
+    "hospitalizationDetails": null,
+    "takingMedication": null,
+    "medicationDetails": null,
+    "useTobacco": null,
+    "useAlcoholDrugs": null,
+    "bleedingTime": null,
+    "bloodType": null,
+    "bloodPressure": null,
 
     "allergies": {
-      "localAnesthetic": "No",
-      "penicillin": "Yes",
-      "antibiotics": "No",
-      "sulfaDrugs": "No",
-      "aspirin": "No",
-      "latex": "No",
-      "others": "No"
+      "localAnesthetic": null,
+      "penicillin": null,
+      "antibiotics": null,
+      "sulfaDrugs": null,
+      "aspirin": null,
+      "latex": null,
+      "others": null
     },
 
     "forWomenOnly": {
-      "pregnant": "No",
-      "nursing": "No",
-      "takingBirthControl": "Yes"
+      "pregnant": null,
+      "nursing": null,
+      "takingBirthControl": null
     },
 
     "medicalConditions": {
@@ -107,15 +106,20 @@ Your entire response must be exactly this JSON structure (nothing more):
       "bloodDiseases": false,
       "headInjuries": false,
       "arthritisRheumatism": false,
-      "other": ""
+      "other": null
     }
   }
 }
+
 
 IMPORTANT:
 - Respond ONLY with the JSON above.
 - DO NOT add explanations.
 - USE null for empty or blank fields.
 - DO NOT add extra text before or after the JSON.
+
+For all Yes/No questions:
+- Use ONLY the strings "Yes" or "No"
+- Do NOT use true or false
 
 Give JSON only.

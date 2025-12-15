@@ -4,11 +4,11 @@ import { extractFormData } from "../services/gemini.service";
 import { prompt } from "../prompts/prompt2Loaded";
 
 export const uploadPage2Form = async (req: Request, res: Response) => {
-  const { patientId } = req.body;
+  const { recordId } = req.params;
 
   const file = (req as any).file;
 
-  if (!patientId) {
+  if (!recordId) {
     return res.status(400).json({ error: "Attach page 1 first" });
   }
 
@@ -17,17 +17,17 @@ export const uploadPage2Form = async (req: Request, res: Response) => {
   }
 
   try {
-    const chart = await prisma.dentalChart.upsert({
-      where: { patientId },
-      update: {},
-      create: { patientId },
-    });
-
     const extractedData = await extractFormData(
       file.buffer,
       file.mimetype,
       prompt
     );
+
+    const chart = await prisma.dentalChart.upsert({
+      where: { dentalRecordId: recordId },
+      update: {},
+      create: { dentalRecordId: recordId },
+    });
 
     await prisma.$transaction(async (tx) => {
       if (Array.isArray(extractedData.ToothFinding)) {

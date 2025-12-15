@@ -4,12 +4,12 @@ import { extractFormData } from "../services/gemini.service";
 import { prompt } from "../prompts/prompt4Loaded";
 
 export const uploadPage4Form = async (req: Request, res: Response) => {
-  const { patientId } = req.body;
+  const { recordId } = req.params;
 
   const file = (req as any).file;
 
-  if (!patientId) {
-    return res.status(400).json({ error: "Attach page 1, 2, and 3 first" });
+  if (!recordId) {
+    return res.status(400).json({ error: "Create a dental record first" });
   }
 
   if (!file) {
@@ -18,7 +18,7 @@ export const uploadPage4Form = async (req: Request, res: Response) => {
 
   try {
     const chart = await prisma.dentalChart.findUnique({
-      where: { patientId },
+      where: { dentalRecordId: recordId },
     });
 
     if (!chart) {
@@ -32,7 +32,7 @@ export const uploadPage4Form = async (req: Request, res: Response) => {
     );
 
     await prisma.treatmentRecord.deleteMany({
-      where: { dentalChartId: chart.id },
+      where: { dentalRecordId: recordId },
     });
 
     const createdRecords = await prisma.treatmentRecord.createMany({
@@ -41,7 +41,7 @@ export const uploadPage4Form = async (req: Request, res: Response) => {
         const paid = Number(row.amountPaid) || 0;
 
         return {
-          dentalChartId: chart.id,
+          dentalRecordId: recordId,
           date: row.date ? new Date(row.date) : null,
           toothQuantity: row.toothQuantity || null,
           procedure: row.procedure || null,
