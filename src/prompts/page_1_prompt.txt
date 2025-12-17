@@ -118,6 +118,9 @@ IMPORTANT:
 - USE null for empty or blank fields.
 - DO NOT add extra text before or after the JSON.
 
+For medical conditions:
+- Use ONLY true or false (boolean)
+
 For all Yes/No questions:
 - Use ONLY the strings "Yes" or "No"
 - Do NOT use true or false

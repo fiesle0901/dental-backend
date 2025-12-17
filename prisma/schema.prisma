@@ -30,7 +30,7 @@ model DentalRecord {
   page4Completed Boolean @default(false)
 }
 
-model Patient {
+model Patient { 
   id         String @id @default(uuid())
     
   firstName  String?
@@ -202,14 +202,14 @@ model ToothRestoration {
   id      String          @id @default(uuid())
   toothId String
   type    RestorationType
-  tooth   ToothFinding    @relation(fields: [toothId], references: [id])
+  tooth   ToothFinding    @relation(fields: [toothId], references: [id], onDelete: Cascade)
 }
 
 model ToothSurgery {
   id           String       @id @default(uuid())
   toothId      String
   toothSurgery SurgeryType
-  tooth        ToothFinding @relation(fields: [toothId], references: [id])
+  tooth        ToothFinding @relation(fields: [toothId], references: [id], onDelete: Cascade)
 }
 
 model PeriodontalScreening {
@@ -219,7 +219,7 @@ model PeriodontalScreening {
   earlyPeriodontitis    Boolean     @default(false)
   moderatePeriodontitis Boolean     @default(false)
   advancedPeriodontitis Boolean     @default(false)
-  form                  DentalChart @relation(fields: [dentalChartId], references: [id])
+  form                  DentalChart @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
 }
 
 model Occlusion {
@@ -230,7 +230,7 @@ model Occlusion {
   overbite         Boolean     @default(false)
   midlineDeviation Boolean     @default(false)
   crossbite        Boolean     @default(false)
-  form             DentalChart @relation(fields: [dentalChartId], references: [id])
+  form             DentalChart @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
 }
 
 model Appliances {
@@ -239,7 +239,7 @@ model Appliances {
   orthodontic   Boolean     @default(false)
   stayplate     Boolean     @default(false)
   others        String?
-  form          DentalChart @relation(fields: [dentalChartId], references: [id])
+  form          DentalChart @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
 }
 
 model Tmd {
@@ -249,7 +249,7 @@ model Tmd {
   clicking      Boolean     @default(false)
   trismus       Boolean     @default(false)
   muscleSpasm   Boolean     @default(false)
-  form          DentalChart @relation(fields: [dentalChartId], references: [id])
+  form          DentalChart @relation(fields: [dentalChartId], references: [id], onDelete: Cascade)
 }
 
 enum Sex {
