@@ -55,13 +55,13 @@ Your entire response must be exactly this JSON structure (nothing more):
     "bloodPressure": null,
 
     "allergies": {
-      "localAnesthetic": null,
-      "penicillin": null,
-      "antibiotics": null,
-      "sulfaDrugs": null,
-      "aspirin": null,
-      "latex": null,
-      "others": null
+      "localAnesthetic": false,
+      "penicillin": false,
+      "antibiotics": false,
+      "sulfaDrugs": false,
+      "aspirin": false,
+      "latex": false,
+      "others": "Other allergies"
     },
 
     "forWomenOnly": {

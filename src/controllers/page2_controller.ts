@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../config/prisma";
 import { extractFormData } from "../services/gemini.service";
 import { prompt } from "../prompts/prompt2Loaded";
+import { ensureRecordIsEditable } from "../utils/recordGuard";
 
 export const uploadPage2Form = async (req: Request, res: Response) => {
   const { recordId } = req.params;
@@ -14,6 +15,22 @@ export const uploadPage2Form = async (req: Request, res: Response) => {
 
   if (!file) {
     return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  try {
+    await ensureRecordIsEditable(recordId);
+  } catch (error: any) {
+    if (error.message === "RECORD_NOT_FOUND") {
+      return res.status(404).json({ error: "Dental record not found" });
+    }
+
+    if (error.message === "RECORD_FINALIZED") {
+      return res
+        .status(409)
+        .json({ error: "Cannot modify. Dental record is finalized" });
+    }
+
+    throw error;
   }
 
   try {
@@ -77,6 +94,14 @@ export const uploadPage2Form = async (req: Request, res: Response) => {
         }
       }
 
+      if (extractedData.xray) {
+        await tx.xrayTaken.upsert({
+          where: { dentalChartId: chart.id },
+          update: extractedData.xray,
+          create: { dentalChartId: chart.id, ...extractedData.xray },
+        });
+      }
+
       if (extractedData.periodontal) {
         await tx.periodontalScreening.upsert({
           where: { dentalChartId: chart.id },
@@ -123,7 +148,8 @@ export const uploadPage2Form = async (req: Request, res: Response) => {
 
     return res.json({
       success: true,
-      dentalChartId: chart.id,
+      dentalRecordId: recordId,
+      extractedData,
     });
   } catch (error: any) {
     console.error(error);

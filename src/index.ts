@@ -2,6 +2,7 @@ import { config } from "dotenv";
 config();
 
 import express, { Express } from "express";
+import cors from "cors";
 import dentalRecordRoutes from "./routes/dentalRecord.routes";
 import patientRoutes from "./routes/patient.routes";
 
@@ -9,6 +10,7 @@ const app: Express = express();
 
 const PORT = process.env.PORT || 5002;
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/dental-records", dentalRecordRoutes);

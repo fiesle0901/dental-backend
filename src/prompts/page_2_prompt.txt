@@ -13,7 +13,9 @@ RULES:
 - For Yes/No option, if encircled, the value is Yes 
 - If a section is completely absent, set it to null
 - Use enum values EXACTLY as defined
+- Capitalize enum values
 - Tooth numbers must follow FDI notation
+- For restoration, use only AM, CO, JC, AB, ATT, P, IN, IMP, S, or RM as value
 
 {
   "ToothFinding": [
@@ -24,6 +26,12 @@ RULES:
       "surgeries": []
     }
   ],
+  "xray": {
+    "panoramic": false,
+    "cephalometric": false,
+    "occlusal": false,
+    "others": "Other xray"
+  },
   "periodontal": {
     "gingivitis": false,
     "earlyPeriodontitis": false,
@@ -31,7 +39,7 @@ RULES:
     "advancedPeriodontitis": false
   },
   "occlusion": {
-    "molarClass":false,
+    "molarClass":"Class I",
     "overjet": false,
     "overbite": false,
     "midlineDeviation": false,
@@ -50,7 +58,7 @@ RULES:
   }
 }
 
-ENUMS:
+USE THESE ENUMS EXACTLY:
 ToothCondition:
 PRESENT, DECAYED, MISSING_CARIES, MISSING_OTHER, IMPACTED, SUPERNUMERARY, ROOT_FRAGMENT, UNERUPTED
 

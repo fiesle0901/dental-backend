@@ -2,6 +2,7 @@ import e, { Request, Response } from "express";
 import { prisma } from "../config/prisma";
 import { extractFormData } from "../services/gemini.service";
 import { prompt } from "../prompts/prompt3Loaded";
+import { ensureRecordIsEditable } from "../utils/recordGuard";
 
 export const uploadPage3Form = async (req: Request, res: Response) => {
   const { recordId } = req.params;
@@ -14,6 +15,22 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
 
   if (!file) {
     return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  try {
+    await ensureRecordIsEditable(recordId);
+  } catch (error: any) {
+    if (error.message === "RECORD_NOT_FOUND") {
+      return res.status(404).json({ error: "Dental record not found" });
+    }
+
+    if (error.message === "RECORD_FINALIZED") {
+      return res
+        .status(409)
+        .json({ error: "Cannot modify. Dental record is finalized" });
+    }
+
+    throw error;
   }
 
   try {
@@ -95,8 +112,9 @@ export const uploadPage3Form = async (req: Request, res: Response) => {
     });
 
     return res.json({
-      sucess: true,
+      success: true,
       dentalRecordId: recordId,
+      extractedData,
     });
   } catch (error: any) {
     console.error(error);
